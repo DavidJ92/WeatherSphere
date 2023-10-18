@@ -61,7 +61,7 @@ Button:hover {
 }
 
 #searchHistory li:hover {
-    background-color: #d5d4d4;
+    background-color: #d5d4d4 !important;
 }
 
 #searchHistory li:last-child {
