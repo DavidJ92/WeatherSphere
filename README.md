@@ -19,7 +19,7 @@ This is a simple web application that provides weather forecasts for various cit
 - **Persistent Data:** Uses `localStorage` to store search history, ensuring that data persists even after page reloads.
 
 ## How to Use
-1. Navegate to the WebApp link [WheaterSphere](link of the app)
+1. Navegate to the WebApp link [WheaterSphere](https://davidj92.github.io/WeatherSphere/)
 1. Enter the name of a city in the search bar and press Enter or click the search button.
 2. The current weather and 5-day forecast for the entered city will be displayed.
 3. Click on a city in the search history to view its weather information again.
