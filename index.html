@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherSphere</title>
+    <link rel="stylesheet" href="./assets/style.css">
+</head>
+
+
+<body>
+    <header>
+        <h1>Weather Dashboard</h1>
+    </header>
+    <div class="container">
+        <div class="left-panel">
+            <div class="search-container">
+                <form id="searchForm">
+                    <input type="text" id="cityInput" placeholder="Enter city">
+                    <button type="submit">Search</button>
+                </form>
+                <div id="searchHistory"></div>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div id="currentWeather"></div>
+            <div id="forecast"></div>
+        </div>
+    </div>
+
+    <script src="./assets/script.js"></script>
+</body>
+
+</html>
