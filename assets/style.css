@@ -1,69 +1,134 @@
-body {
+:root {
+    --primary-color: #3498db; /* Blue color */
+    --secondary-color: #2980b9; /* Darker shade of blue on hover */
+    --background-gradient-start: #adbbe6;
+    --background-gradient-end: #4682B4;
+    --text-color: #000;
+    --background: rgba(254, 254, 254, 0.8);
+    --box-shadow-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-}
-
-.container {
+    background-color: var(--background);
+    
+  }
+  
+  .container {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background: linear-gradient(to right, #ADD8E6, #4682B4);
+    background: linear-gradient(to right, rgb(245, 245, 211), #3988a2);
     border-radius: 10px;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-}
-
-header h1 {
+    box-shadow: 0px 0px 10px 0px var(--box-shadow-color);
+  }
+  
+  #five-day-containers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: var(--card-background);
+  }
+  
+  .days {
+    width: 150px;
+    margin: 10px;
+    padding: 10px;
+    background: linear-gradient(to right, rgb(245, 245, 211), #3988a2);
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px var(--box-shadow-color);
+    text-align: center;
+  }
+  
+  .days .weathericon {
+    max-width: 100px;
+    max-height: 100px;
+    margin-bottom: 5px;
+    background: linear-gradient(to right, var(--background-gradient-start), var(--background-gradient-end));
+  }
+  
+  header h1 {
+    font-size: 40px;
     text-align: center;
     margin-bottom: 25px;
-    background: linear-gradient(to right, #ADD8E6, #4682B4);
-}
-.left-panel {
+    background: linear-gradient(to right, var(--background-gradient-start), var(--background-gradient-end));
+  }
+
+  header p {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 30px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',;
+   
+  }
+
+  div h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    background: linear-gradient(to right, var(--background-gradient-start), var(--background-gradient-end));
+  }
+  .left-panel {
     flex: 1;
-    padding: 0 10px; /* Adjust padding as needed */
+    padding: 0 10px;
     max-width: 250px;
     text-align: center;
-}
-
-.right-panel {
+  }
+  
+  .right-panel {
     flex: 1;
-    padding: 0 10px; /* Adjust padding as needed */
-}
-
-Button {
-    background-color: #3498db; /* Blue color */
-    color: white; /* Text color (white in this case) */
-    border: none; /* Remove border */
-    padding: 10px 20px; /* Padding for the button */
-    cursor: pointer; /* Show pointer cursor on hover */
-    border-radius: 5px; /* Optional: Add rounded corners */
-}
-
-/* Style the button on hover */
-Button:hover {
-    background-color: #2980b9; /* Darker shade of blue on hover */
-}
-
-#searchHistory {
+    padding: 0 10px;
+  }
+  
+  .btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .btn:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  #searchHistory {
     list-style-type: none;
     padding: 15px;
-    color: #000;
-}
-
-#searchHistory li {
-    background-color: #f2f2f2 !important; /* Add !important to override browser default */
+    color: var(--text-color);
+  }
+  
+  #searchHistory li {
+    background-color: lightgrey;
     padding: 8px 16px;
     margin-bottom: 5px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
-
-#searchHistory li:hover {
-    background-color: #d5d4d4 !important;
-}
-
-#searchHistory li:last-child {
+  }
+  
+  #searchHistory li:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  #searchHistory li:last-child {
     margin-bottom: 0;
-}
+  }
+  
+  @media screen and (max-width: 768px) {
+    .days {
+      width: calc(50% - 20px);
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .days {
+      width: calc(100% - 20px);
+    }
+  }
+  
