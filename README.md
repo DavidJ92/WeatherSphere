@@ -32,7 +32,7 @@ This is a simple web application that provides weather forecasts for various cit
 
 ## Screenshots
 
-![Screenshot 1](/path/to/screenshot1.png)
-![Screenshot 2](/path/to/screenshot2.png)
+![Screenshot 1](/assets/images/dashboardimg.png)
+![Screenshot 2](/assets/images/forecastimg.png)
 
 

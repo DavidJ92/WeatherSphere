@@ -2,34 +2,58 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeatherSphere</title>
-    <link rel="stylesheet" href="./assets/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Forecast</title>
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
 
-
 <body>
-    <header>
-        <h1>Weather Dashboard</h1>
-    </header>
-    <div class="container">
-        <div class="left-panel">
-            <div class="search-container">
-                <form id="searchForm">
-                    <input type="text" id="cityInput" placeholder="Enter city">
-                    <button type="submit">Search</button>
-                </form>
-                <div id="searchHistory"></div>
-            </div>
-        </div>
-        <div class="right-panel">
-            <div id="currentWeather"></div>
-            <div id="forecast"></div>
-        </div>
-    </div>
+  <header class="hero">
+    <h1 class="title">🌥️Weather Dashboard🌥️</h1>
+    <p class="subtitle">Search a city name to see the weather forecast!</p>
+  </header>
 
-    <script src="./assets/script.js"></script>
+  <div class="container">
+    <div class="card-body">
+      <div class="search-body">
+        <h2 class="card-header text-uppercase">Search By City</h2>
+        <input name="cityname" id="cityname" type="text" autofocus="true" class="form-input" placeholder="Enter City Name">
+        <button id="search-btn" type="submit" class="btn">Search</button>
+      </div>
+      <hr>
+      <div id="searchHistory" class="history-body">
+        Search History:
+        <ul id="history-list"></ul>
+      </div>
+    </div>
+    <div class="weather-container">
+      <div class="icon">
+        <img src="./assets/images/sunny_icon.png" class="weathericon" alt="clear">
+      </div>
+      <div id="current-weather">
+        <h2 class="city"></h2>
+        <h3 class="date"></h3>
+        <br>
+        <h4 class="temperature">Temperature: </h4>
+        <h4 class="description">Description: </h4>
+        <h4 class="wind">Wind: </h4>
+        <h4 class="humidity">Humidity: %</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="forecast">
+    <hr>
+    <div class="forecast-title">
+      <h1>✨5-Day Weather Forecast:✨</h1>
+    </div>
+    <div id="five-day-containers" class="days-container"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"></script>
+  <script src="/assets/script.js"></script>
 </body>
 
 </html>

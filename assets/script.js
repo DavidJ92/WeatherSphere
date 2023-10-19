@@ -1,130 +1,127 @@
-const apiKey = '559e98cfd4fc4362e5b58c46ae508eae'; // Replace with your OpenWeatherMap API key
-const searchForm = document.getElementById('searchForm');
-const cityInput = document.getElementById('cityInput');
-const currentWeatherContainer = document.getElementById('currentWeather');
-const forecastContainer = document.getElementById('forecast');
-const searchHistory = document.getElementById('searchHistory');
-
-const loggedCities = new Set();
-
-searchForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    const city = cityInput.value.trim();
-    if (city) {
-        getWeatherData(city);
-        cityInput.value = '';
+document.addEventListener("DOMContentLoaded", function() {
+    var apiKey = "559e98cfd4fc4362e5b58c46ae508eae";
+    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?units=imperial&q=";
+    var searchInput = document.getElementById("cityname");
+    var daysContainer = document.getElementById("five-day-containers");
+    var historyList = document.getElementById("history-list");
+    var searchHistory = [];
+    
+    // Load search history from local storage if available
+    if (localStorage.getItem("searchHistory")) {
+        searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+        renderSearchHistory();
     }
-});
-
-// Event delegation for click events on search history list
-searchHistory.addEventListener('click', function(event) {
-    if (event.target.tagName === 'LI') {
-        const city = event.target.textContent;
-        getWeatherData(city);
+    
+    $("#search-btn").on("click", function () {
+        if (searchInput.value == "") {
+            alert("Please enter city name.");
+        } else {
+            var cityName = searchInput.value;
+            searchHistory.push(cityName);
+            // Save updated search history to local storage
+            localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+            renderSearchHistory();
+            fetchWeather(cityName);
+        }
+    });
+    
+    function renderSearchHistory() {
+        // Clear the history list before rendering
+        historyList.innerHTML = "";
+        searchHistory.forEach(city => {
+            var listItem = document.createElement("li");
+            listItem.textContent = city;
+            listItem.addEventListener("click", function() {
+                fetchWeather(city);
+            });
+            historyList.appendChild(listItem);
+        });
     }
-});
 
-function getWeatherData(city) {
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-    fetch(apiUrl)
+
+function fetchWeather(city) {
+    fetch(apiUrl + city + "&appid=" + apiKey)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            displayCurrentWeather(data);
-            const lat = data.coord.lat;
-            const lon = data.coord.lon;
-            return fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=${apiKey}&units=metric`);
-        })
-        .then(response => response.json())
-        .then(data => {
-            const dailyData = data.daily;
-            displayForecast(dailyData);
-            updateSearchHistory(city);
+            // Extract necessary data from the API response
+            var currentWeather = data.list[0];
+            var forecast = data.list.slice(1, 6); // Get the next 5-day forecast
+
+            // Update current weather UI
+            document.querySelector('.city').textContent = city;
+            document.querySelector('.date').textContent = dayjs(currentWeather.dt_txt).format("ddd MMMM D, YYYY");
+            document.querySelector('.temperature').textContent = "Temperature: " + Math.round(currentWeather.main.temp) + "°F";
+            document.querySelector('.description').textContent = "Description: " + currentWeather.weather[0].description;
+            document.querySelector('.wind').textContent = "Wind: " + Math.round(currentWeather.wind.speed) + "Mph";
+            document.querySelector('.humidity').textContent = "Humidity: " + currentWeather.main.humidity + "%";
+
+            // Update current weather icon
+            var weatherIcon = getWeatherIcon(currentWeather.weather[0].main);
+            document.querySelector('.weathericon').setAttribute("src", weatherIcon);
+
+            // Update 5-day forecast UI
+            daysContainer.innerHTML = "";
+            forecast.forEach(day => {
+                var dayContainer = document.createElement("div");
+                dayContainer.className = "days";
+                dayContainer.innerHTML = `
+                    <div class="icon">
+                        <img src="${getWeatherIcon(day.weather[0].main)}" class="weathericon" alt="weather-icon">
+                    </div>
+                    <h2 class="city">${city}</h2>
+                    <h3 class="date">${dayjs(day.dt_txt).format("ddd MMMM D, YYYY")}</h3>
+                    <br>
+                    <h4 class="temperature">Temperature: ${Math.round(day.main.temp)}°F</h4>
+                    <h4 class="description">Description: ${day.weather[0].description}</h4>
+                    <h4 class="wind">Wind: ${Math.round(day.wind.speed)}Mph</h4>
+                    <h4 class="humidity">Humidity: ${day.main.humidity}%</h4>
+                `;
+                daysContainer.appendChild(dayContainer);
+            });
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
 }
 
-function displayCurrentWeather(data) {
-    const weatherIconClass = `wi wi-owm-${data.weather[0].id}`;
-    const sunEmoji = '☀️'; // Sun emoji
-    const currentTime = new Date(data.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const currentDate = new Date(data.dt * 1000).toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
 
-    currentWeatherContainer.innerHTML = `
-        <h2>${data.name} ${sunEmoji}</h2>
-        <p>${currentDate} ${currentTime}</p> <!-- Current Date and Time -->
-        <i class="${weatherIconClass}"></i> <!-- Weather Icon -->
-        <p>Temperature: ${data.main.temp}°C</p>
-        <p>Humidity: ${data.main.humidity}%</p>
-        <p>Wind Speed: ${data.wind.speed} m/s</p>
-        <p>Weather: ${data.weather[0].description}</p>
-    `;
+
+function getWeatherIcon(weatherType) {
+    switch (weatherType) {
+        case "Sunny":
+            return "./assets/images/sunny_icon.png";
+        case "Clouds":
+            return "./assets/images/clouds_icon.png";
+        case "Rain":
+            return "./assets/images/rain_icon.png";
+        case "Thunderstorm":
+            return "./assets/images/thunderstorm_icon.png";
+        case "Drizzle":
+            return "./assets/images/drizzle_icon.png";
+        case "Mist":
+            return "./assets/images/mist_icon.png";
+        case "Haze":
+            return "./assets/images/haze_icon.png";
+        case "Fog":
+            return "./assets/images/fog_icon.png";
+        case "Snow":
+            return "./assets/images/snow_icon.png";
+        default:
+            return "./assets/images/sunny_icon.png";
+    }
 }
 
-
-
-function displayForecast(dailyData) {
-    forecastContainer.innerHTML = '<h2>5-Day Forecast:</h2><ul>';
-
-    // Check if dailyData is a valid array with forecast data
-    if (Array.isArray(dailyData) && dailyData.length > 0) {
-        // Limit the forecast to the next 5 days
-        const nextFiveDays = dailyData.slice(1, 6); // Exclude the current day (index 0) and include the next 5 days
-
-        nextFiveDays.forEach(day => {
-            const date = new Date(day.dt * 1000);
-            const options = { weekday: 'long', month: 'short', day: 'numeric' };
-            const dateString = date.toLocaleDateString(undefined, options);
-            const weatherIconClass = `wi wi-owm-${day.weather[0].id}`;
-            
-            forecastContainer.innerHTML += `
-                <li>
-                    <strong>${dateString}</strong> 
-                    <i class="${weatherIconClass}"></i> <!-- Weather Icon -->
-                    : ${day.weather[0].description}, 
-                    Temperature: ${day.temp.day}°C, 
-                    Humidity: ${day.humidity}%
-                </li>
-            `;
+function renderSearchHistory() {
+    // Clear the history list before rendering
+    historyList.innerHTML = "";
+    searchHistory.forEach(city => {
+        var listItem = document.createElement("li");
+        listItem.textContent = city;
+        listItem.addEventListener("click", function() {
+            fetchWeather(city);
         });
-    } else {
-        forecastContainer.innerHTML += '<li>No forecast data available</li>';
-    }
-    forecastContainer.innerHTML += '</ul>';
+        historyList.appendChild(listItem);
+    });
 }
-
-
-
-function updateSearchHistory(city) {
-    if (!loggedCities.has(city)) {
-        loggedCities.add(city);
-        const cityItem = document.createElement('li');
-        cityItem.textContent = city;
-        cityItem.style.backgroundColor = 'lightgray'; // Set background color to light gray
-        searchHistory.appendChild(cityItem);
-
-        // Store search history in localStorage
-        const searchHistoryArray = Array.from(loggedCities);
-        localStorage.setItem('searchHistory', JSON.stringify(searchHistoryArray));
-    }
-}
-
-// Load search history from localStorage on page load
-window.addEventListener('load', function() {
-    const storedSearchHistory = localStorage.getItem('searchHistory');
-    if (storedSearchHistory) {
-        const searchHistoryArray = JSON.parse(storedSearchHistory);
-        searchHistoryArray.forEach(city => {
-            const cityItem = document.createElement('li');
-            cityItem.textContent = city;
-            cityItem.style.backgroundColor = 'lightgray'; // Set background color to light gray
-            searchHistory.appendChild(cityItem);
-            loggedCities.add(city);
-        });
-    }
 });
-
-
 
